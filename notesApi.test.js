@@ -10,7 +10,6 @@ describe('NotesApi', () => {
     ]));
 
     api.loadNotes((returnedNotesFromApi) => {
-      console.log('here');
       expect(returnedNotesFromApi[0]).toEqual('This note is from the server');
     });
   });

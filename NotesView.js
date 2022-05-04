@@ -6,15 +6,14 @@ class NotesView {
     this.model = model;
     this.api = api;
     this.mainContainerEl = document.querySelector('#main-container');
-    this.buttonEl = document.querySelector('#add-note-button')
-    this.textFieldEl = document.querySelector('#add-note-text')
-    console.log(this.mainContainerEl);
+    this.buttonEl = document.querySelector('#add-button');
+    this.textFieldEl = document.querySelector('#note-text');
 
     this.buttonEl.addEventListener('click', () => {
-      this.model.addNote(this.textFieldEl.value)
+      this.model.addNote(this.textFieldEl.value);
       this.textFieldEl.value = '';
       this.displayNotes();
-    })
+    });
   }
 
   displayNotes() {
@@ -22,16 +21,20 @@ class NotesView {
       note.remove();
     });
 
-    this.notes = this.model.getNotes();
-    for (let i = 0; i < this.notes.length; i++) {
-      let newElement = document.createElement('div');
-      newElement.classList.add('note')
-      newElement.innerText = `${this.notes[i]}`;
-      this.mainContainerEl.append(newElement);
-    };
-  };
+    this.model.getNotes().forEach(note => {
+      const noteEl = document.createElement('div');
+      noteEl.innerText = note;
+      noteEl.classList.add('note');
+      this.mainContainerEl.append(noteEl);
+    });
+  }
 
-
+  displayNotesFromApi() {
+    this.api.loadNotes(notes => {
+      this.model.setNotes(notes);
+      this.displayNotes();
+    });
+  }
 }
 
 module.exports = NotesView;
