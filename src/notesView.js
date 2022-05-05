@@ -11,6 +11,7 @@ class NotesView {
     this.textFieldEl = document.querySelector('#note-text');
 
     this.buttonEl.addEventListener('click', () => {
+      // this.api.createNote(this.textFieldEl.value, )
       this.model.addNote(this.textFieldEl.value);
       this.displayNotes();
       this.textFieldEl.value = '';

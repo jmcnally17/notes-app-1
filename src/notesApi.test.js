@@ -10,12 +10,19 @@ describe('NotesApi', () => {
     ]));
 
     api.loadNotes((returnedNotesFromApi) => {
-      expect(returnedNotesFromApi[0]).toEqual('This note is from the server');
+      expect(returnedNotesFromApi[0]).toBe('This note is from the server');
     });
   });
 
   it('createNote adds a new note to the server', () => {
     const api = new NotesApi();
-    
+
+    fetch.mockResponseOnce(JSON.stringify([
+      'This note has been added to the server'
+    ]));
+
+    api.createNote('This is a note', (response) => {
+      expect(response[0]).toBe('This note has been added to the server');
+    });
   });
 });

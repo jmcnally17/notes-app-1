@@ -55,4 +55,14 @@ describe('NotesView', () => {
     expect(view.model.getNotes).toHaveBeenCalledTimes(1);
     expect(document.querySelector('div.note').innerText).toBe('This is an example note');
   });
+
+  it('adds a note to the server when the form is submitted', () => {
+    const messageInputEl = document.querySelector('#note-text');
+    messageInputEl.value = 'Walk the dogs';
+    view.model.getNotes.mockImplementation(() => [messageInputEl.value]);
+    view.api.createNote.mockImplementation((callback) => callback([messageInputEl.value]));
+    const addNotebuttonEl = document.querySelector('#add-button');
+    addNotebuttonEl.click();
+    expect(document.querySelector('div.note').innerText).toBe('Walk the dogs');
+  });
 });
