@@ -3,6 +3,7 @@
  */
 
 const fs = require('fs');
+const { Z_VERSION_ERROR } = require('zlib');
 const NotesApi = require('./notesApi');
 const NotesModel = require('./notesModel');
 const NotesView = require('./notesView');
@@ -35,12 +36,18 @@ describe('NotesView', () => {
     });
   });
 
-  it('adds a note which is then added to the list of notes displayed', () => {
+  it('adds a note to the list of notes displayed', () => {
     const messageInputEl = document.querySelector('#note-text');
     messageInputEl.value = 'Walk the dogs';
+
+    view.model.convertString.mockImplementation(() => ({ content: messageInputEl.value }));
+    view.model.addNote.mockImplementation(() => undefined);
+    view.api.createNote.mockImplementation((note, callback) => callback(note));
     view.model.getNotes.mockImplementation(() => [messageInputEl.value]);
+
     const addNotebuttonEl = document.querySelector('#add-button');
     addNotebuttonEl.click();
+
     expect(document.querySelector('div.note').innerText).toBe('Walk the dogs');
   });
 
@@ -59,10 +66,22 @@ describe('NotesView', () => {
   it('adds a note to the server when the form is submitted', () => {
     const messageInputEl = document.querySelector('#note-text');
     messageInputEl.value = 'Walk the dogs';
+
+    view.model.convertString.mockImplementation(() => ({ content: messageInputEl.value }));
+    view.model.addNote.mockImplementation(() => undefined);
+    view.api.createNote.mockImplementation((note, callback) => callback(note));
     view.model.getNotes.mockImplementation(() => [messageInputEl.value]);
-    view.api.createNote.mockImplementation((callback) => callback([messageInputEl.value]));
+
     const addNotebuttonEl = document.querySelector('#add-button');
     addNotebuttonEl.click();
+
+    expect(view.model.convertString).toHaveBeenCalledTimes(1);
+    expect(view.api.createNote).toHaveBeenCalledTimes(1);
+    expect(view.model.addNote).toHaveBeenCalledTimes(1);
+    expect(view.model.getNotes).toHaveBeenCalledTimes(1);
+
+    view.displayNotesFromApi();
+
     expect(document.querySelector('div.note').innerText).toBe('Walk the dogs');
   });
 });
