@@ -13,4 +13,8 @@ describe('NotesApi', () => {
       expect(returnedNotesFromApi[0]).toEqual('This note is from the server');
     });
   });
+
+  it('createNote adds a new note to the server', () => {
+    
+  });
 });

@@ -3,28 +3,34 @@
  */
 
 const fs = require('fs');
-const NotesView = require('./NotesView');
-const NotesModel = require('./notesModel');
+const NotesView = require('./notesView');
 require('jest-fetch-mock').enableMocks();
 
 describe('NotesView', () => {
+
+  const mockModel = {
+    addNote: () => undefined,
+    getNotes: () => ['This is an example note'],
+    setNotes: () => undefined,
+  }
+  
+  const mockApi = {
+    loadNotes: () => ['This is an example note'],
+  };
+
   describe('displayNotes', () => {
     it("gets the notes from model and displays it as a new div element with class 'note'", () => {
       document.body.innerHTML = fs.readFileSync('./index.html');
-      const model = new NotesModel();
-      model.addNote('This is an example note');
-      const view = new NotesView(model);
+      const view = new NotesView(mockModel);
 
       view.displayNotes();
 
-      expect(document.querySelectorAll('div.note').length).toBe(1);
+      expect(document.querySelector('div.note').innerText).toBe('This is an example note');
     });
 
     it('correct number of notes are displayed when display notes is called twice', () => {
       document.body.innerHTML = fs.readFileSync('./index.html');
-      const model = new NotesModel();
-      model.addNote('This is an example note');
-      const view = new NotesView(model);
+      const view = new NotesView(mockModel);
 
       view.displayNotes();
       view.displayNotes();
@@ -33,7 +39,7 @@ describe('NotesView', () => {
     });
   });
 
-  it('addes a note which is then added to the list of notes displayed', () => {
+  it('adds a note which is then added to the list of notes displayed', () => {
     document.body.innerHTML = fs.readFileSync('./index.html');
     const view = new NotesView();
     const messageInput = document.querySelector('#note-text');
@@ -46,15 +52,12 @@ describe('NotesView', () => {
 
   it('displayNotesFromApi loads notes from the server and displays them', () => {
     document.body.innerHTML = fs.readFileSync('./index.html');
-    const model = new NotesModel;
 
-    const mockApi = {
-      loadNotes: () => ['This note is from the server']
-    };
-    const view = new NotesView(model, mockApi);
+    const view = new NotesView(mockModel, mockApi);
 
-    view.displayNotesFromApi();
-
-    expect(document.querySelector('div.note')).toEqual('This note is from the server');
+    view.displayNotesFromApi(() => {
+      console.log('here');
+      expect(document.querySelectorAll('div.note').length).toEqual(1);
+    });
   });
 });

@@ -1,12 +1,12 @@
 const NotesModel = require('./notesModel');
 
 describe('notesModel class', () => {
-  it('#getNotes on new model returns empty notes array', () => {
+  it('getNotes on new model returns empty notes array', () => {
     const model = new NotesModel();
     expect(model.getNotes()).toEqual([]);
   });
 
-  it('#addNote adds items to the notes array', () => {
+  it('addNote adds items to the notes array', () => {
     const model = new NotesModel();
     model.addNote('Buy milk');
     model.addNote('Go to the gym');
@@ -16,7 +16,7 @@ describe('notesModel class', () => {
     ]);
   });
 
-  it('#reset deletes existing notes to return to empty notes array', () => {
+  it('reset deletes existing notes to return to empty notes array', () => {
     const model = new NotesModel();
     model.addNote('Buy milk');
     model.addNote('Go to the gym');
@@ -26,7 +26,7 @@ describe('notesModel class', () => {
 
   it('setNotes sets the notes equal to an array object', () => {
     const model = new NotesModel();
-    notes = [
+    const notes = [
       'Note one',
       'Note two'
     ];
