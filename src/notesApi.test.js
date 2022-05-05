@@ -15,6 +15,7 @@ describe('NotesApi', () => {
   });
 
   it('createNote adds a new note to the server', () => {
+    const api = new NotesApi();
     
   });
 });

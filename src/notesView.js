@@ -5,14 +5,15 @@ class NotesView {
   constructor(model = new NotesModel, api = new NotesApi) {
     this.model = model;
     this.api = api;
+
     this.mainContainerEl = document.querySelector('#main-container');
     this.buttonEl = document.querySelector('#add-button');
     this.textFieldEl = document.querySelector('#note-text');
 
     this.buttonEl.addEventListener('click', () => {
       this.model.addNote(this.textFieldEl.value);
-      this.textFieldEl.value = '';
       this.displayNotes();
+      this.textFieldEl.value = '';
     });
   }
 
