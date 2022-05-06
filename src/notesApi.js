@@ -22,6 +22,12 @@ class NotesApi {
       })
       .catch(callbackTwo);
   }
+
+  reset() {
+    fetch("http://localhost:3000/notes", {
+      method: "DELETE",
+    }).then(console.log("Notes deleted"));
+  }
 }
 
 module.exports = NotesApi;
