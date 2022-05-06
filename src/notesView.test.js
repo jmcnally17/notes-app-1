@@ -84,4 +84,9 @@ describe('NotesView', () => {
 
     expect(document.querySelector('div.note').innerText).toBe('Walk the dogs');
   });
+
+  it('displayError prints an error on the page when fetch fails', () => {
+    view.displayError();
+    expect(document.querySelector('div.error').innerText).toBe('Oops, something went wrong!');
+  });
 });

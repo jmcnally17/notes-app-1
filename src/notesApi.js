@@ -1,13 +1,14 @@
 class NotesApi {
-  loadNotes(callback) {
+  loadNotes(callbackOne, callbackTwo) {
     fetch("http://localhost:3000/notes")
       .then((response) => response.json())
       .then((notes) => {
-        callback(notes);
-      });
+        callbackOne(notes);
+      })
+      .catch(callbackTwo);
   }
 
-  createNote(note, callback) {
+  createNote(note, callbackOne, callbackTwo) {
     fetch("http://localhost:3000/notes", {
       method: "POST",
       headers: {
@@ -16,9 +17,10 @@ class NotesApi {
       body: JSON.stringify(note),
     })
       .then((response) => response.json())
-      .then((note) => {
-        callback(note);
-      });
+      .then((notes) => {
+        callbackOne(notes);
+      })
+      .catch(callbackTwo);
   }
 }
 
