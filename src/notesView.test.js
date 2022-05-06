@@ -4,32 +4,38 @@
 
 const fs = require('fs');
 const { Z_VERSION_ERROR } = require('zlib');
+const EmojiApi = require('./emojiApi');
 const NotesApi = require('./notesApi');
 const NotesModel = require('./notesModel');
 const NotesView = require('./notesView');
 
 jest.mock('./notesModel');
 jest.mock('./notesApi');
+jest.mock('./emojiApi');
 
 describe('NotesView', () => {
   beforeEach(() => {
     NotesModel.mockClear();
     NotesApi.mockClear();
+    EmojiApi.mockClear()
     document.body.innerHTML = fs.readFileSync('./index.html');
     mockModel = new NotesModel();
     mockApi = new NotesApi();
-    view = new NotesView(mockModel, mockApi);
+    mockEmojiApi = new EmojiApi();
+    view = new NotesView(mockModel, mockApi, mockEmojiApi);
   });
 
   describe('displayNotes', () => {
     it("gets the notes from model and displays it as a new div element with class 'note'", () => {
       view.model.getNotes.mockImplementation(() => ['This is an example note']);
+      view.emojiApi.createEmoji.mockImplementation((note, callbackOne, callbackTwo) => callbackTwo(note));
       view.displayNotes();
       expect(document.querySelector('div.note').innerText).toBe('This is an example note');
     });
 
     it('correct number of notes are displayed when display notes is called twice', () => {
       view.model.getNotes.mockImplementation(() => ['This is an example note']);
+      view.emojiApi.createEmoji.mockImplementation((note, callbackOne, callbackTwo) => callbackTwo(note));
       view.displayNotes();
       view.displayNotes();
       expect(document.querySelectorAll('div.note').length).toBe(1);
@@ -44,6 +50,7 @@ describe('NotesView', () => {
     view.model.addNote.mockImplementation(() => undefined);
     view.api.createNote.mockImplementation((note, callback) => callback(note));
     view.model.getNotes.mockImplementation(() => [messageInputEl.value]);
+    view.emojiApi.createEmoji.mockImplementation((note, callbackOne, callbackTwo) => callbackTwo(note));
 
     const addNotebuttonEl = document.querySelector('#add-button');
     addNotebuttonEl.click();
@@ -55,6 +62,7 @@ describe('NotesView', () => {
     view.model.getNotes.mockImplementation(() => ['This is an example note']);
     view.model.setNotes.mockImplementation(() => undefined);
     view.api.loadNotes.mockImplementation((callback) => callback(['This is an example note']));
+    view.emojiApi.createEmoji.mockImplementation((note, callbackOne, callbackTwo) => callbackTwo(note));
 
     view.displayNotesFromApi();
     expect(view.api.loadNotes).toHaveBeenCalledTimes(1);
@@ -71,6 +79,7 @@ describe('NotesView', () => {
     view.model.addNote.mockImplementation(() => undefined);
     view.api.createNote.mockImplementation((note, callback) => callback(note));
     view.model.getNotes.mockImplementation(() => [messageInputEl.value]);
+    view.emojiApi.createEmoji.mockImplementation((note, callbackOne, callbackTwo) => callbackTwo(note));
 
     const addNotebuttonEl = document.querySelector('#add-button');
     addNotebuttonEl.click();
